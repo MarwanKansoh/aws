@@ -1,0 +1,26 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  Bundle:
+    Type: String
+    Description: Select the workspaces image
+    Default: wsb-******
+  Directory:
+    Type: String
+    Description: Provide the Directory ID
+    Default: d-******
+  User:
+    Type: String
+    Description: Workspaces username in the Directory
+    AllowedPattern: '^[a-z0-9]{1,20}$'
+    ConstraintDescription: username must be in lowercase and maximum 20 characters
+Resources:
+  WorkSpace:
+    Type: 'AWS::WorkSpaces::Workspace'
+    Properties:
+      BundleId: !Ref Bundle
+      DirectoryId: !Ref Directory
+      UserName: !Ref User
+Outputs:
+  WorkSpaceId:
+    Description: ID of the WorkSpaces
+    Value: !Ref WorkSpace
