@@ -7,7 +7,7 @@ Parameters:
     Description: Provide the domain administrator account password
     Type: String
     NoEcho: true
-    Default: P@ssw0rd
+    Default: Put some default value here that you intend to change during deployment.
   PublicSubnet1:
     Description: Directory Subnet 1
     Type: 'List<AWS::EC2::Subnet::Id>'
