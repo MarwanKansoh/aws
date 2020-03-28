@@ -1,0 +1,64 @@
+Parameters:
+  DomainName:
+    Description: Provide the domain FQDN
+    Type: String
+    Default: corp.contino.io
+  Password:
+    Description: Provide the domain administrator account password
+    Type: String
+    NoEcho: true
+    Default: P@ssw0rd
+  PublicSubnet1:
+    Description: Directory Subnet 1
+    Type: 'List<AWS::EC2::Subnet::Id>'
+  PublicSubnet2:
+    Description: Directory Subnet 2
+    Type: 'List<AWS::EC2::Subnet::Id>'
+  VPCID:
+    Description: The VPC ID for the Directory
+    Type: 'List<AWS::EC2::VPC::Id>'
+  Size:
+    Description: Size of Directory
+    Type: String
+    AllowedValues:
+      - Small
+      - Large
+    Default: Small
+Resources:
+  SimpleAD:
+    Type: 'AWS::DirectoryService::SimpleAD'
+    Properties:
+      CreateAlias: false
+      EnableSso: false
+      Name: !Ref DomainName
+      Password: !Ref Password
+      Size: !Ref Size
+      VpcSettings:
+        SubnetIds:
+          - !Select 
+            - '0'
+            - !Ref PublicSubnet1
+          - !Select 
+            - '0'
+            - !Ref PublicSubnet2
+        VpcId: !Select 
+          - '0'
+          - !Ref VPCID
+Outputs:
+  DirectoryID:
+    Description: Directory ID
+    Value: !Ref SimpleAD
+  PrimaryDNS:
+    Description: Primary Directory DNS
+    Value: !Select 
+      - '0'
+      - !GetAtt 
+        - SimpleAD
+        - DnsIpAddresses
+  SecondaryDNS:
+    Description: Seconday Directory DNS
+    Value: !Select 
+      - '1'
+      - !GetAtt 
+        - SimpleAD
+        - DnsIpAddresses
